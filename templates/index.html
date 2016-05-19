@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>X File Hub</title>
-    <link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
 <h1>X File Hub</h1>
@@ -19,10 +19,10 @@
 <p>Here is your file:</p>
 <ul>
     {% for file in file_list %}
-    <li>
-        <a href="/download?filename={{ escape(file) }}">{{ escape(file) }}</a>
-    </li>
-    {% end %}
+        <li>
+            <a href="/download?filename={{ file }}">{{ file }}</a>
+        </li>
+    {% endfor %}
 </ul>
 
 </body>
@@ -48,7 +48,7 @@
                 continue;
             }
 
-            var uploader = new Worker(' {{ static_url("uploader.js") }}');
+            var uploader = new Worker('{{ url_for('static', filename='uploader.js') }}');
             uploader.postMessage({
                 'wid': i,
                 'name': file.name,
