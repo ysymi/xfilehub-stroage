@@ -5,7 +5,7 @@ var BLOCK_SIZE = 4 * 1024 * 1024;
 onmessage = function (message) {
     var obj = message.data;
     var blockCount = Math.ceil(obj.data.size / BLOCK_SIZE);
-    console.log('for worker' + obj.wid + ' will send ' + blockCount + ' blocks');
+    console.log('worker' + obj.wid + ' will send ' + blockCount + ' blocks');
 
     for (var i = 0; i < blockCount; ++i) {
         var name = obj.name;

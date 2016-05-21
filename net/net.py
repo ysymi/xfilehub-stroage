@@ -1,4 +1,3 @@
-import socket
 from threading import Thread
 
 import pexpect
@@ -6,23 +5,21 @@ import pexpect
 ips = []
 
 
-def ping(ip):
+def is_alive(ip):
     cmd = pexpect.spawn('ping -c 1 %s' % ip)
-    check = cmd.expect([pexpect.TIMEOUT, '0% packet loss'], 2)
-
+    check = cmd.expect([pexpect.TIMEOUT, '0% packet loss'])
     if check == 1:
-        print(ip)
         ips.append(ip)
+    return check == 1
 
 
 def get_ips():
     for i in range(100, 110):
         ip = '192.168.1.%s' % i
-        t = Thread(target=ping, args=(ip,))
+        t = Thread(target=is_alive, args=(ip,))
         t.start()
-        t.join()
+        t.join(0.1)
     return ips
 
 
 print(get_ips())
-
