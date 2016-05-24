@@ -11,8 +11,7 @@ ROOT = os.path.join(ROOT, 'storages', 'storage#%s' % PORT)  # collect all storag
 STORAGE_DIR = os.path.join(ROOT, 'chunks')
 CHUNK_NOTE_PATH = os.path.join(ROOT, 'chunk.note')
 
-BUFFER_SIZE = 1024 * 1024
-CHUNK_NAME_FORMAT = '%s.#$s'
 
+CHUNK_NAME_FORMAT = '{filename}.#{seq}'
 LOGGING_FORMAT = '%(asctime)s  %(levelname)s  %(message)s'
 APP_INFO = {'host': HOST, 'port': PORT}
