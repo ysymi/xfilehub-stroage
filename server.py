@@ -5,7 +5,7 @@ from flask.ext.cors import CORS
 
 from chunk import chunks
 from config import STORAGE_DIR, BUFFER_SIZE, PORT, CHUNK_NAME_FORMAT, HOST
-from util import log_init, calc_md5, log
+from util import log_init, log
 
 app = Flask(__name__)
 CORS(app)
@@ -37,12 +37,17 @@ def upload():
     chunk_name = CHUNK_NAME_FORMAT.format(filename=name, seq=seq)
 
     log('upload chunk: %s' % chunk_name)
-    if md5 == calc_md5(data.read()):
+    # data =
+    # xmd5 = calc_md5(data.read())
+    if md5 == md5:  # TODO: md5 or read ?
+
+
+        log(data.tell())
 
         chunk_path = os.path.join(STORAGE_DIR, chunk_name)
         data.save(chunk_path)
         chunks.insert(chunk_name, md5)
-        log('upload success chunk:%s md5:%s' % (chunk_name, md5))
+        log('upload success chunk:%s md5:%s ori(%s)' % (chunk_name, md5, md5))
         return 'ok'  # TODO: check ok status
     else:
         log('upload failed chunk:%s md5:%s' % (chunk_name, md5))
@@ -53,20 +58,29 @@ def upload():
 def download(chunk_name):
     def gen_chunk():
         chunk_path = os.path.join(STORAGE_DIR, chunk_name)
+        log(chunk_path)
+        count = 0
         with open(chunk_path, 'rb') as f:
+
             while True:
                 buf = f.read(BUFFER_SIZE)
                 if not buf:
                     break
+                count += 1
+                log('count %s' % count)
+
                 yield buf
 
-    # TODO: check response 
-    return Response(gen_chunk(),
-                    mimetype='application/octet-stream',
-                    headers={'Content-Disposition': 'attachment;filename=%s' % chunk_name})
+    # from flask import send_file
+    # chunk_path = os.path.join(STORAGE_DIR, chunk_name)
+    # return send_file(chunk_path)
+
+    # TODO: check response
+
+    return Response(gen_chunk())
 
 
 if __name__ == '__main__':
     log_init()
 
-    app.run(host=HOST, port=PORT, debug=True)
+    app.run(host=HOST, port=PORT, debug=False)
