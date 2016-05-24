@@ -1,6 +1,0 @@
-
-
-@app.route('/')
-def index():
-    return 'I\'m running'
-
