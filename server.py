@@ -18,18 +18,14 @@ def index():
 
 @app.route('/chunks')
 def get_chunks():
-    return jsonify(chunks.get_all())
+    # data = chunks.get_all()
+    return jsonify(chunks=chunks.get_all())
 
 
 @app.route('/info')
 def get_info():
-    info = {
-        'host': HOST,
-        'port': PORT,
-        'name': '%s:%s' % (HOST, PORT)
-    }
     log('/info is called')
-    return jsonify(info)
+    return jsonify(host=HOST, port=PORT, name='%s:%s' % (HOST, PORT))
 
 
 @app.route('/upload', methods=['POST'])
@@ -38,9 +34,10 @@ def upload():
     seq = request.form['seq']
     md5 = request.form['md5']
     data = request.files['data']
-    chunk_name = CHUNK_NAME_FORMAT % (name, seq)
+    chunk_name = CHUNK_NAME_FORMAT.format(filename=name, seq=seq)
 
-    if md5 == calc_md5(data):
+    log('upload chunk: %s' % chunk_name)
+    if md5 == calc_md5(data.read()):
 
         chunk_path = os.path.join(STORAGE_DIR, chunk_name)
         data.save(chunk_path)
