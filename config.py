@@ -1,8 +1,9 @@
 import os
+import socket
 
 DEBUG = True
 
-HOST = 'localhost'
+HOST = socket.gethostbyname(socket.gethostname())
 PORT = int(os.environ['PORT'])
 ALL_PORTS = list(range(8000, 8010))
 
